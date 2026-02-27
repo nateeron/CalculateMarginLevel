@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculate Margin Level</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --card: #161a22;
+      --card-border: #252b36;
+      --text: #e4e8ef;
+      --text-muted: #8b92a0;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --input-bg: #1e232d;
+      --input-border: #2d3544;
+      --result-bg: #1a1f2e;
+      --success: #22c55e;
+      --slider-track: #2d3544;
+      --slider-thumb: #3b82f6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2rem;
+      max-width: 480px;
+      width: 100%;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .field {
+      margin-bottom: 1.25rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .field input[type="number"] {
+      width: 100%;
+      padding: 0.65rem 0.9rem;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+    }
+
+    .field input[type="number"]:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+    }
+
+    .slider-wrap {
+      margin-bottom: 1.25rem;
+    }
+
+    .slider-wrap label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .slider-wrap .slider-value {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 8px;
+      -webkit-appearance: none;
+      appearance: none;
+      background: var(--slider-track);
+      border-radius: 4px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--slider-thumb);
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--slider-thumb);
+      cursor: pointer;
+      border: none;
+    }
+
+    .results {
+      margin-top: 1.75rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--card-border);
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      font-size: 0.9rem;
+    }
+
+    .result-row .label {
+      color: var(--text-muted);
+    }
+
+    .result-row .value {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .result-row.highlight .value {
+      color: var(--accent);
+      font-size: 1rem;
+    }
+
+    .result-row.ml .value {
+      color: var(--success);
+      font-size: 1.1rem;
+    }
+
+    .formula {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1 class="card-title">Calculate Margin Level</h1>
+
+    <div class="field">
+      <label>Balance Value (x0)</label>
+      <input type="number" id="x0" placeholder="0" step="any" value="2200">
+    </div>
+
+    <div class="field">
+      <label>Debt (x1)</label>
+      <input type="number" id="x1" placeholder="0" step="any" value="850">
+    </div>
+
+    <div class="field">
+      <label>Order USD (x3)</label>
+      <input type="number" id="x3" placeholder="0" step="any" value="18.8">
+    </div>
+
+    <div class="field">
+      <label>Order Buy % (x6)</label>
+      <input type="number" id="x6" placeholder="0" step="any" min="0" value="0.2">
+    </div>
+
+    <div class="slider-wrap">
+      <label>
+        <span>Balance Value % (→ x4)</span>
+        <span class="slider-value" id="sliderPercent">0%</span>
+      </label>
+      <input type="range" id="percentSlider" min="0" max="75" step="0.01" value="0">
+    </div>
+
+    <div class="results">
+      <div class="result-row">
+        <span class="label">Balance from % (x4)</span>
+        <span class="value" id="x4">0</span>
+      </div>
+      <div class="result-row highlight">
+        <span class="label">x0 − x4 = x2</span>
+        <span class="value" id="x2">0</span>
+      </div>
+      <div class="result-row">
+        <span class="label">จำนวน Order (x7)</span>
+        <span class="value" id="x7">0</span>
+      </div>
+      <div class="result-row">
+        <span class="label">มูลค่า Order (x7 × x3)</span>
+        <span class="value" id="orderValue">0</span>
+      </div>
+      <div class="result-row">
+        <span class="label">Debt รวม = Debt (x1) + มูลค่า Order (x7 × x3)</span>
+        <span class="value" id="debtTotal">0</span>
+      </div>
+      <div class="result-row ml">
+        <span class="label">ML = x2 ÷ Debt รวม</span>
+        <span class="value" id="ml">—</span>
+      </div>
+      <div class="result-row">
+        <span class="label">x2 to Debt รวม (%)</span>
+        <span class="value" id="x2Percent">—</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const x0El = document.getElementById('x0');
+    const x1El = document.getElementById('x1');
+    const x3El = document.getElementById('x3');
+    const x6El = document.getElementById('x6');
+    const percentSlider = document.getElementById('percentSlider');
+    const sliderPercentEl = document.getElementById('sliderPercent');
+    const x4El = document.getElementById('x4');
+    const x2El = document.getElementById('x2');
+    const x7El = document.getElementById('x7');
+    const orderValueEl = document.getElementById('orderValue');
+    const debtTotalEl = document.getElementById('debtTotal');
+    const mlEl = document.getElementById('ml');
+    const x2PercentEl = document.getElementById('x2Percent');
+
+    function num(v) {
+      const n = parseFloat(v);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function formatNum(n) {
+      if (n === null || n === undefined || isNaN(n)) return '—';
+      if (Number.isInteger(n)) return n.toLocaleString();
+      return Number(n.toFixed(4)).toLocaleString();
+    }
+
+    function calc() {
+      const x0 = num(x0El.value);
+      const x1 = num(x1El.value);
+      const x3 = num(x3El.value);
+      const x6 = num(x6El.value);
+      const percent = num(percentSlider.value);
+
+      const x4 = x0 * (percent / 100);
+      const x2 = x0 - x4;
+      const x7 = x6 !== 0 ? percent / x6 : 0;
+      const orderValue = x7 * x3;
+      const debtTotal = x1 + orderValue;
+      const ml = debtTotal !== 0 ? x2 / debtTotal : null;
+      const x2Percent = x2 !== 0 ? ((debtTotal - x2) / x2) * 100 : null;
+
+      sliderPercentEl.textContent = percent + '%';
+      x4El.textContent = formatNum(x4);
+      x2El.textContent = formatNum(x2);
+      x7El.textContent = formatNum(x7);
+      orderValueEl.textContent = formatNum(orderValue);
+      debtTotalEl.textContent = formatNum(debtTotal);
+      mlEl.textContent = ml !== null ? formatNum(ml) : '—';
+      x2PercentEl.textContent = x2Percent !== null ? formatNum(x2Percent) + '%' : '—';
+    }
+
+    [x0El, x1El, x3El, x6El, percentSlider].forEach(el => {
+      el.addEventListener('input', calc);
+      el.addEventListener('change', calc);
+    });
+
+    calc();
+  </script>
+</body>
+</html>
