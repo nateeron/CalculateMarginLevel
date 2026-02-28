@@ -238,11 +238,46 @@
       background: var(--accent);
       border-color: var(--accent);
     }
+
+    .mini-card {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .mini-card .label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .mini-card .price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .mini-card .loading {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+    }
   </style>
 </head>
 <body>
   <div class="card">
     <h1 class="card-title">Calculate Margin Level</h1>
+
+    <div class="mini-card">
+      <span class="label">XRPUSDT (Binance) = x</span>
+      <span class="price" id="xrpPrice">—</span>
+    </div>
 
     <div class="field load-row">
       <label>Config ID</label>
@@ -253,28 +288,28 @@
     </div>
 
     <div class="field">
-      <label>Balance Value (x0)</label>
+      <label>Balance Value</label>
       <input type="number" id="x0" placeholder="0" step="any" value="2200">
     </div>
 
     <div class="field">
-      <label>Debt (x1)</label>
+      <label>Debt</label>
       <input type="number" id="x1" placeholder="0" step="any" value="850">
     </div>
 
     <div class="field">
-      <label>Order USD (x3)</label>
+      <label>Order USD</label>
       <input type="number" id="x3" placeholder="0" step="any" value="18.8">
     </div>
 
     <div class="field">
-      <label>Order Buy % (x6)</label>
+      <label>Order Buy %</label>
       <input type="number" id="x6" placeholder="0" step="any" min="0" value="0.2">
     </div>
 
     <div class="slider-wrap">
       <label>
-        <span>Balance Value % (→ x4)</span>
+        <span>Balance Value %</span>
         <span class="slider-value" id="sliderPercent">0%</span>
       </label>
       <div class="slider-control">
@@ -286,32 +321,36 @@
 
     <div class="results">
       <div class="result-row">
-        <span class="label">Balance from % (x4)</span>
+        <span class="label">Balance from</span>
         <span class="value" id="x4">0</span>
       </div>
       <div class="result-row highlight">
-        <span class="label">x0 − x4 = x2</span>
+        <span class="label">Total Balance</span>
         <span class="value" id="x2">0</span>
       </div>
       <div class="result-row">
-        <span class="label">จำนวน Order (x7)</span>
+        <span class="label">จำนวน Order</span>
         <span class="value" id="x7">0</span>
       </div>
       <div class="result-row">
-        <span class="label">มูลค่า Order (x7 × x3)</span>
+        <span class="label">มูลค่า Order</span>
         <span class="value" id="orderValue">0</span>
       </div>
       <div class="result-row">
-        <span class="label">Debt รวม = Debt (x1) + มูลค่า Order (x7 × x3)</span>
+        <span class="label">Debt รวม</span>
         <span class="value" id="debtTotal">0</span>
       </div>
       <div class="result-row ml">
-        <span class="label">ML = x2 ÷ Debt รวม</span>
+        <span class="label">ML</span>
         <span class="value" id="ml">—</span>
       </div>
       <div class="result-row">
-        <span class="label">x2 to Debt รวม (%)</span>
+        <span class="label">ทนลงได้ (%)</span>
         <span class="value" id="x2Percent">—</span>
+      </div>
+      <div class="result-row">
+        <span class="label">XRPUSDT ราคาประมาณ </span>
+        <span class="value" id="calPrice">—</span>
       </div>
     </div>
   </div>
@@ -333,6 +372,8 @@
     const debtTotalEl = document.getElementById('debtTotal');
     const mlEl = document.getElementById('ml');
     const x2PercentEl = document.getElementById('x2Percent');
+    const calPriceEl = document.getElementById('calPrice');
+    let xrpLastPrice = null;
 
     function num(v) {
       const n = parseFloat(v);
@@ -368,6 +409,8 @@
       debtTotalEl.textContent = formatNum(debtTotal);
       mlEl.textContent = ml !== null ? formatNum(ml) : '—';
       x2PercentEl.textContent = x2Percent !== null ? formatNum(x2Percent) + '%' : '—';
+      const calPrice = (xrpLastPrice != null && x2Percent != null) ? xrpLastPrice * (1 + x2Percent / 100) : null;
+      calPriceEl.textContent = calPrice != null ? formatNum(calPrice) : '—';
     }
 
     [x0El, x1El, x3El, x6El, percentSlider].forEach(el => {
@@ -468,6 +511,27 @@
     loadBtn.addEventListener('click', loadFromApi);
     loadFromApi();
     calc();
+
+    const xrpPriceEl = document.getElementById('xrpPrice');
+    async function fetchXrpPrice() {
+      try {
+        const res = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=XRPUSDT');
+        const data = await res.json();
+        if (data.lastPrice != null) {
+          xrpLastPrice = parseFloat(data.lastPrice);
+          xrpPriceEl.textContent = '$' + xrpLastPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+        } else {
+          xrpLastPrice = null;
+          xrpPriceEl.textContent = '—';
+        }
+      } catch (e) {
+        xrpLastPrice = null;
+        xrpPriceEl.textContent = '—';
+      }
+      calc();
+    }
+    fetchXrpPrice();
+    setInterval(fetchXrpPrice, 15000);
   </script>
 </body>
 </html>
