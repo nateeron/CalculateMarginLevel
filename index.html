@@ -208,6 +208,36 @@
       opacity: 0.6;
       cursor: not-allowed;
     }
+
+    .slider-control {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .slider-control input[type="range"] {
+      flex: 1;
+    }
+
+    .slider-btn {
+      width: 36px;
+      height: 36px;
+      padding: 0;
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
   </style>
 </head>
 <body>
@@ -247,7 +277,11 @@
         <span>Balance Value % (→ x4)</span>
         <span class="slider-value" id="sliderPercent">0%</span>
       </label>
-      <input type="range" id="percentSlider" min="0" max="75" step="0.01" value="0">
+      <div class="slider-control">
+        <button type="button" id="percentDec" class="slider-btn" title="Decrease">&#8249;</button>
+        <input type="range" id="percentSlider" min="0" max="100" step="0.01" value="0">
+        <button type="button" id="percentInc" class="slider-btn" title="Increase">&#8250;</button>
+      </div>
     </div>
 
     <div class="results">
@@ -319,9 +353,9 @@
       const percent = num(percentSlider.value);
 
       const x4 = x0 * (percent / 100);
-      const x2 = x0 - x4;
       const x7 = x6 !== 0 ? percent / x6 : 0;
       const orderValue = x7 * x3;
+      const x2 = (x0 - x4) + orderValue;
       const debtTotal = x1 + orderValue;
       const ml = debtTotal !== 0 ? x2 / debtTotal : null;
       const x2Percent = x2 !== 0 ? ((debtTotal - x2) / x2) * 100 : null;
@@ -340,6 +374,52 @@
       el.addEventListener('input', calc);
       el.addEventListener('change', calc);
     });
+
+    const PERCENT_STEP = 0.01;
+    const PERCENT_MIN = 0;
+    const PERCENT_MAX = 100;
+
+    function setPercent(v) {
+      v = Math.max(PERCENT_MIN, Math.min(PERCENT_MAX, Math.round(v / PERCENT_STEP) * PERCENT_STEP));
+      percentSlider.value = v;
+      calc();
+    }
+
+    percentSlider.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      let v = num(percentSlider.value);
+      v += e.deltaY < 0 ? PERCENT_STEP : -PERCENT_STEP;
+      setPercent(v);
+    }, { passive: false });
+
+    document.getElementById('percentDec').addEventListener('click', () => {
+      setPercent(num(percentSlider.value) - PERCENT_STEP);
+    });
+    document.getElementById('percentInc').addEventListener('click', () => {
+      setPercent(num(percentSlider.value) + PERCENT_STEP);
+    });
+
+    x6El.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const step = 0.01;
+      const min = 0;
+      let v = num(x6El.value);
+      v += e.deltaY < 0 ? step : -step;
+      v = Math.max(min, Math.round(v / step) * step);
+      x6El.value = v;
+      calc();
+    }, { passive: false });
+
+    x3El.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      const step = 0.01;
+      const min = 0;
+      let v = num(x3El.value);
+      v += e.deltaY < 0 ? step : -step;
+      v = Math.max(min, Math.round(v / step) * step);
+      x3El.value = v;
+      calc();
+    }, { passive: false });
 
     async function loadFromApi() {
       const configId = parseInt(configIdEl.value, 10) || 4;
