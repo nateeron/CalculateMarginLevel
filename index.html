@@ -414,6 +414,57 @@
     .page-decay button.btn2 { width: auto; margin-top: 0; }
     @media (max-width: 980px) { .page-decay .grid { grid-template-columns: 1fr; } }
 
+    /* Convert Coin – under Margin Level card, theme */
+    .convert-coin {
+      width: 100%;
+      max-width: 900px;
+      margin-top: 1.5rem;
+      padding: 1.5rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .convert-coin-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 1rem; font-size: 0.85rem; }
+    .tradingview-widget-container { width: 100%; margin-bottom: 1.25rem; border-radius: 8px; overflow: hidden; }
+    .tradingview-widget-container__widget { height: 46px; width: 100%; }
+    .convert-coin-rates { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.75rem; margin-bottom: 1.25rem; }
+    .convert-coin-rate-card { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 0.75rem; }
+    .convert-coin-rate-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .convert-coin-rate-value { font-size: 1rem; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+    .convert-coin-rate-source { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .convert-coin-calc { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 10px; padding: 1rem; }
+    .convert-coin-calc-title { font-size: 1rem; margin-bottom: 0.75rem; color: var(--text); text-align: center; font-weight: 600; }
+    .convert-coin-input-group { margin-bottom: 1rem; }
+    .convert-coin-input-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; }
+    .convert-coin-input-group label { display: block; margin-bottom: 0.35rem; color: var(--text-muted); font-size: 0.8rem; }
+    .convert-coin-select { padding: 0.4rem 0.6rem; background: var(--card); border: 1px solid var(--input-border); border-radius: 8px; color: var(--text); font-size: 0.9rem; cursor: pointer; }
+    .convert-coin-input-wrapper { display: flex; gap: 0.35rem; align-items: center; }
+    .convert-coin-input-wrapper input { flex: 1; padding: 0.6rem 0.75rem; background: var(--card); border: 1px solid var(--input-border); border-radius: 8px; color: var(--text); font-size: 1rem; font-family: 'JetBrains Mono', monospace; }
+    .convert-coin-input-wrapper input:focus { outline: none; border-color: var(--accent); }
+    .convert-coin-step-btns { display: flex; flex-direction: column; gap: 2px; }
+    .convert-coin-step-btn { width: 36px; height: 24px; background: var(--input-border); border: 1px solid var(--card-border); border-radius: 6px; color: var(--text); font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .convert-coin-step-btn:hover { background: var(--accent); border-color: var(--accent); }
+    .convert-coin-pad-toggle { width: 100%; margin-top: 0.5rem; padding: 0.5rem; background: var(--input-border); border: 1px solid var(--card-border); border-radius: 8px; color: var(--text); cursor: pointer; font-size: 0.85rem; }
+    .convert-coin-pad-toggle:hover { background: var(--accent); border-color: var(--accent); }
+    .convert-coin-number-pad { display: none; margin-top: 0.75rem; padding: 1rem; background: var(--card); border: 1px solid var(--input-border); border-radius: 10px; }
+    .convert-coin-number-pad.show { display: block; }
+    .convert-coin-num-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; max-width: 180px; }
+    .convert-coin-num-btn { width: 50px; height: 44px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 8px; color: var(--text); font-size: 1.1rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: 'JetBrains Mono', monospace; }
+    .convert-coin-num-btn:hover { background: var(--accent); border-color: var(--accent); }
+    .convert-coin-num-btn.convert-coin-clear { grid-column: span 2; width: 100%; }
+    .convert-coin-results { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 0.75rem; margin-top: 1rem; }
+    .convert-coin-result-card { background: var(--card); border: 1px solid var(--input-border); border-radius: 10px; padding: 0.75rem; text-align: center; }
+    .convert-coin-result-label { font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.35rem; }
+    .convert-coin-result-value { font-size: 1.15rem; font-weight: 600; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+    .convert-coin-status { text-align: center; margin-top: 0.75rem; padding: 0.5rem; border-radius: 8px; font-size: 0.8rem; }
+    .convert-coin-status.loading { background: var(--input-bg); color: #f59e0b; }
+    .convert-coin-status.error { background: var(--input-bg); color: #ef4444; }
+    .convert-coin-status.success { background: var(--input-bg); color: var(--success); }
+    .convert-coin-last-update { text-align: center; margin-top: 0.5rem; color: var(--text-muted); font-size: 0.75rem; }
+    .convert-coin-status.loading { animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+
   </style>
 </head>
 <body>
@@ -511,6 +562,88 @@
       </div>
     </div>
   </div>
+
+  <div class="convert-coin">
+    <p class="convert-coin-subtitle">Real-Time Exchange Rates & Calculator</p>
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-tickers.js" async>
+      {"symbols":[{"proName":"BINANCE:XRPUSDT","title":""},{"proName":"BITKUB:XRPTHB","title":""},{"proName":"OANDA:XAUUSD","title":""},{"proName":"SAXO:XAUTHB","title":""},{"proName":"BINANCE:BTCUSDT","title":""}],"colorTheme":"dark","locale":"th_TH","isTransparent":true,"showSymbolLogo":false}
+      </script>
+    </div>
+    <div class="convert-coin-rates">
+      <div class="convert-coin-rate-card">
+        <div class="convert-coin-rate-label">USD → THB</div>
+        <div class="convert-coin-rate-value" id="usd-thb">Loading...</div>
+        <div class="convert-coin-rate-source">Real-Time Rate</div>
+      </div>
+      <div class="convert-coin-rate-card">
+        <div class="convert-coin-rate-label">XRP → THB</div>
+        <div class="convert-coin-rate-value" id="xrp-thb">Loading...</div>
+        <div class="convert-coin-rate-source">Bitkub</div>
+      </div>
+      <div class="convert-coin-rate-card">
+        <div class="convert-coin-rate-label">XRP → USDT</div>
+        <div class="convert-coin-rate-value" id="xrp-usdt">Loading...</div>
+        <div class="convert-coin-rate-source">Binance</div>
+      </div>
+    </div>
+    <div class="convert-coin-calc">
+      <h2 class="convert-coin-calc-title">Calculator</h2>
+      <div class="convert-coin-input-group">
+        <div class="convert-coin-input-header">
+          <label for="currency-select">Convert from:</label>
+          <select id="currency-select" class="convert-coin-select">
+            <option value="THB" selected>THB</option>
+            <option value="XRP">XRP</option>
+            <option value="USD">USD</option>
+          </select>
+        </div>
+        <label for="thb-input" id="amount-label">Enter Amount (THB)</label>
+        <div class="convert-coin-input-wrapper">
+          <input type="text" id="thb-input" placeholder="0.00" value="0">
+          <div class="convert-coin-step-btns">
+            <button type="button" class="convert-coin-step-btn" id="step-up">▲</button>
+            <button type="button" class="convert-coin-step-btn" id="step-down">▼</button>
+          </div>
+        </div>
+        <button type="button" class="convert-coin-pad-toggle" id="toggle-pad">Show Number Pad</button>
+        <div class="convert-coin-number-pad" id="number-pad">
+          <div class="convert-coin-num-grid">
+            <button type="button" class="convert-coin-num-btn" data-num="1">1</button>
+            <button type="button" class="convert-coin-num-btn" data-num="2">2</button>
+            <button type="button" class="convert-coin-num-btn" data-num="3">3</button>
+            <button type="button" class="convert-coin-num-btn" data-num="4">4</button>
+            <button type="button" class="convert-coin-num-btn" data-num="5">5</button>
+            <button type="button" class="convert-coin-num-btn" data-num="6">6</button>
+            <button type="button" class="convert-coin-num-btn" data-num="7">7</button>
+            <button type="button" class="convert-coin-num-btn" data-num="8">8</button>
+            <button type="button" class="convert-coin-num-btn" data-num="9">9</button>
+            <button type="button" class="convert-coin-num-btn" data-num=".">.</button>
+            <button type="button" class="convert-coin-num-btn" data-num="0">0</button>
+            <button type="button" class="convert-coin-num-btn convert-coin-clear" id="clear-input">Clear</button>
+          </div>
+        </div>
+      </div>
+      <div class="convert-coin-results">
+        <div class="convert-coin-result-card">
+          <div class="convert-coin-result-label">THB</div>
+          <div class="convert-coin-result-value" id="thb-result">0.00</div>
+        </div>
+        <div class="convert-coin-result-card">
+          <div class="convert-coin-result-label">XRP</div>
+          <div class="convert-coin-result-value" id="xrp-result">0.00</div>
+        </div>
+        <div class="convert-coin-result-card">
+          <div class="convert-coin-result-label">USDT</div>
+          <div class="convert-coin-result-value" id="usdt-result">0.00</div>
+        </div>
+      </div>
+    </div>
+    <div class="convert-coin-status" id="status"></div>
+    <div class="convert-coin-last-update" id="last-update"></div>
+  </div>
+
   </div>
 
   <div id="page-decay" class="page-panel page-decay">
@@ -781,6 +914,162 @@
     loadBtn.addEventListener('click', loadFromApi);
     loadFromApi();
     calc();
+
+    (function convertCoin() {
+      var exchangeRates = { usdThb: 31, xrpThb: 0, xrpUsdt: 0 };
+      function updateStatus(msg, type) {
+        var el = document.getElementById('status');
+        if (!el) return;
+        el.textContent = msg;
+        el.className = 'convert-coin-status ' + type;
+        if (type === 'loading') el.classList.add('loading');
+      }
+      function updateLastUpdate() {
+        var el = document.getElementById('last-update');
+        if (el) el.textContent = 'Last updated: ' + new Date().toLocaleTimeString('en-US', { hour12: false });
+      }
+      function fetchUsdThb() {
+        return fetch('https://api.exchangerate-api.com/v4/latest/USD')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.rates && data.rates.THB) {
+              exchangeRates.usdThb = data.rates.THB;
+              var el = document.getElementById('usd-thb');
+              if (el) el.textContent = '1 USD = ' + exchangeRates.usdThb.toFixed(2) + ' THB';
+              return true;
+            }
+            return false;
+          })
+          .catch(function() {
+            var el = document.getElementById('usd-thb');
+            if (el) el.textContent = '1 USD = ' + exchangeRates.usdThb.toFixed(2) + ' THB (Default)';
+            return false;
+          });
+      }
+      function fetchXrpThb() {
+        return fetch('https://api.bitkub.com/api/market/ticker')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.THB_XRP && data.THB_XRP.last) {
+              exchangeRates.xrpThb = data.THB_XRP.last;
+              var el = document.getElementById('xrp-thb');
+              if (el) el.textContent = '1 XRP = ' + exchangeRates.xrpThb.toFixed(2) + ' THB';
+              return true;
+            }
+            return false;
+          })
+          .catch(function() {
+            var el = document.getElementById('xrp-thb');
+            if (el) el.textContent = 'Error loading';
+            return false;
+          });
+      }
+      function fetchXrpUsdt() {
+        return fetch('https://api.binance.com/api/v3/ticker/price?symbol=XRPUSDT')
+          .then(function(r) { return r.json(); })
+          .then(function(data) {
+            if (data.price) {
+              exchangeRates.xrpUsdt = parseFloat(data.price);
+              var el = document.getElementById('xrp-usdt');
+              if (el) el.textContent = '1 XRP = ' + exchangeRates.xrpUsdt.toFixed(4) + ' USDT';
+              return true;
+            }
+            return false;
+          })
+          .catch(function() {
+            var el = document.getElementById('xrp-usdt');
+            if (el) el.textContent = 'Error loading';
+            return false;
+          });
+      }
+      function calculate() {
+        var inputEl = document.getElementById('thb-input');
+        var fromCurrency = document.getElementById('currency-select').value;
+        var inputValue = parseFloat(inputEl && inputEl.value) || 0;
+        var thbRes = document.getElementById('thb-result');
+        var xrpRes = document.getElementById('xrp-result');
+        var usdtRes = document.getElementById('usdt-result');
+        if (inputValue <= 0) {
+          if (thbRes) thbRes.textContent = '0.00';
+          if (xrpRes) xrpRes.textContent = '0.00';
+          if (usdtRes) usdtRes.textContent = '0.00';
+          return;
+        }
+        var thbAmount = 0;
+        if (fromCurrency === 'THB') thbAmount = inputValue;
+        else if (fromCurrency === 'XRP' && exchangeRates.xrpThb > 0) thbAmount = inputValue * exchangeRates.xrpThb;
+        else if (fromCurrency === 'USD' && exchangeRates.usdThb > 0) thbAmount = inputValue * exchangeRates.usdThb;
+        else {
+          if (thbRes) thbRes.textContent = 'N/A';
+          if (xrpRes) xrpRes.textContent = 'N/A';
+          if (usdtRes) usdtRes.textContent = 'N/A';
+          return;
+        }
+        if (thbRes) thbRes.textContent = thbAmount.toFixed(2);
+        if (exchangeRates.xrpThb > 0 && xrpRes) xrpRes.textContent = (thbAmount / exchangeRates.xrpThb).toFixed(6);
+        else if (xrpRes) xrpRes.textContent = 'N/A';
+        var usdtAmount = 0;
+        if (exchangeRates.xrpThb > 0 && exchangeRates.xrpUsdt > 0) {
+          usdtAmount = (thbAmount / exchangeRates.xrpThb) * exchangeRates.xrpUsdt;
+        } else if (exchangeRates.usdThb > 0) {
+          usdtAmount = thbAmount / exchangeRates.usdThb;
+        }
+        if (usdtRes) usdtRes.textContent = usdtAmount > 0 ? usdtAmount.toFixed(2) : 'N/A';
+      }
+      function fetchAll() {
+        updateStatus('Updating exchange rates...', 'loading');
+        Promise.allSettled([fetchUsdThb(), fetchXrpThb(), fetchXrpUsdt()]).then(function(results) {
+          var ok = results.filter(function(r) { return r.status === 'fulfilled' && r.value; }).length;
+          updateStatus(ok > 0 ? 'Rates updated (' + ok + '/3)' : 'Some rates failed', ok > 0 ? 'success' : 'error');
+          updateLastUpdate();
+          calculate();
+        });
+      }
+      var currencySelect = document.getElementById('currency-select');
+      var amountLabel = document.getElementById('amount-label');
+      var thbInput = document.getElementById('thb-input');
+      if (currencySelect && amountLabel && thbInput) {
+        currencySelect.addEventListener('change', function() {
+          amountLabel.textContent = 'Enter Amount (' + currencySelect.value + ')';
+          thbInput.placeholder = '0.00 ' + currencySelect.value;
+          calculate();
+        });
+        var numberPad = document.getElementById('number-pad');
+        var togglePad = document.getElementById('toggle-pad');
+        var clearBtn = document.getElementById('clear-input');
+        if (togglePad && numberPad) {
+          togglePad.addEventListener('click', function() {
+            numberPad.classList.toggle('show');
+            togglePad.textContent = numberPad.classList.contains('show') ? 'Hide Number Pad' : 'Show Number Pad';
+          });
+        }
+        document.querySelectorAll('.convert-coin-num-btn[data-num]').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            var num = btn.getAttribute('data-num');
+            var cur = thbInput.value || '0';
+            if (num === '.') { if (cur.indexOf('.') === -1) thbInput.value = cur + '.'; }
+            else { thbInput.value = cur === '0' ? num : cur + num; }
+            calculate();
+          });
+        });
+        if (clearBtn) clearBtn.addEventListener('click', function() { thbInput.value = '0'; calculate(); });
+        var stepUp = document.getElementById('step-up');
+        var stepDown = document.getElementById('step-down');
+        if (stepUp) stepUp.addEventListener('click', function() {
+          var v = parseFloat(thbInput.value) || 0;
+          thbInput.value = (v + 0.01).toFixed(2);
+          calculate();
+        });
+        if (stepDown) stepDown.addEventListener('click', function() {
+          var v = parseFloat(thbInput.value) || 0;
+          thbInput.value = Math.max(0, v - 0.01).toFixed(2);
+          calculate();
+        });
+        thbInput.addEventListener('input', calculate);
+        fetchAll();
+        setInterval(fetchAll, 30000);
+      }
+    })();
 
     const xrpPriceEl = document.getElementById('xrpPrice');
     async function fetchXrpPrice() {
