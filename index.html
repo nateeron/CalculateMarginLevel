@@ -36,8 +36,9 @@
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      align-items: flex-start;
-      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
       padding: 1.5rem;
       line-height: 1.5;
     }
@@ -105,7 +106,7 @@
       margin-bottom: 0.4rem;
     }
 
-    .field input[type="number"] {
+    .field input[type="text"] {
       width: 100%;
       padding: 0.65rem 0.9rem;
       background: var(--input-bg);
@@ -116,7 +117,7 @@
       font-size: 0.95rem;
     }
 
-    .field input[type="number"]:focus {
+    .field input[type="text"]:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
@@ -344,9 +345,84 @@
       border-color: var(--accent);
     }
 
+    .page-tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .page-tab {
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--input-border);
+      background: var(--input-bg);
+      color: var(--text-muted);
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .page-tab:hover {
+      color: var(--text);
+      border-color: var(--card-border);
+    }
+    .page-tab.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+    .page-panel {
+      display: none;
+      width: 100%;
+      max-width: 900px;
+    }
+    .page-panel.active {
+      display: block;
+    }
+
+    /* Price Decay tab – theme + same font as Margin Level */
+    .page-decay {
+      font-family: 'Outfit', sans-serif;
+    }
+    .page-decay .wrap { max-width: 1100px; margin: 0; padding: 0; }
+    .page-decay h1 { margin: 0 0 14px; font-size: 18px; color: var(--text); }
+    .page-decay .grid { display: grid; grid-template-columns: 360px 1fr; gap: 14px; }
+    .page-decay .card { background: var(--card); border: 1px solid var(--card-border); border-radius: 14px; padding: 14px; }
+    .page-decay .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .page-decay label { display: block; font-size: 12px; color: var(--text-muted); margin: 8px 0 6px; }
+    .page-decay input, .page-decay select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid var(--input-border); background: var(--input-bg); color: var(--text); outline: none; font-family: 'JetBrains Mono', monospace; }
+    .page-decay input:focus, .page-decay select:focus { border-color: var(--accent); }
+    .page-decay button { background: var(--accent); color: white; }
+    .page-decay button.btn2 { background: var(--input-bg); border: 1px solid var(--input-border); color: var(--text); }
+    .page-decay .muted { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
+    .page-decay .kpi { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+    .page-decay .pill { background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; padding: 10px; }
+    .page-decay .pill .t { font-size: 12px; color: var(--text-muted); }
+    .page-decay .pill .v { font-size: 18px; margin-top: 3px; font-weight: 700; color: var(--text); font-family: 'JetBrains Mono', monospace; }
+    .page-decay .tabs { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .page-decay .tab { padding: 8px 10px; border-radius: 999px; border: 1px solid var(--input-border); background: var(--input-bg); cursor: pointer; font-size: 12px; color: var(--text); }
+    .page-decay .tab.active { background: var(--accent); border-color: var(--accent); color: white; }
+    .page-decay canvas { width: 100%; height: 330px; background: var(--input-bg); border: 1px solid var(--input-border); border-radius: 12px; }
+    .page-decay table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 12px; }
+    .page-decay th, .page-decay td { border-bottom: 1px solid var(--card-border); padding: 8px; text-align: right; color: var(--text); font-family: 'Outfit', sans-serif; }
+    .page-decay td { font-family: 'JetBrains Mono', monospace; }
+    .page-decay th { color: var(--text-muted); font-weight: 600; }
+    .page-decay td:first-child, .page-decay th:first-child { text-align: center; }
+    .page-decay .warn { color: #ffd7a8; }
+    .page-decay .tools { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .page-decay button { width: 100%; margin-top: 12px; padding: 10px 12px; border: 0; border-radius: 10px; font-weight: 600; cursor: pointer; }
+    .page-decay button.btn2 { width: auto; margin-top: 0; }
+    @media (max-width: 980px) { .page-decay .grid { grid-template-columns: 1fr; } }
+
   </style>
 </head>
 <body>
+  <div class="page-tabs">
+    <button type="button" class="page-tab active" data-page="margin">Margin Level</button>
+    <button type="button" class="page-tab" data-page="decay">Price Decay 0.2%</button>
+  </div>
+
+  <div id="page-margin" class="page-panel active">
   <div class="card">
     <div class="card-header">
       <h1 class="card-title">Calculate Margin Level</h1>
@@ -356,7 +432,7 @@
     <div class="field load-row" style="display: none;">
       <label>Config ID</label>
       <div class="load-input-wrap">
-        <input type="number" id="configId" placeholder="4" step="1" value="4">
+        <input type="text" id="configId" placeholder="4" value="4">
         <button type="button" id="loadBtn" class="load-btn">Load</button>
       </div>
     </div>
@@ -364,19 +440,19 @@
     <div class="input-grid">
       <div class="field">
         <label>Balance Value</label>
-        <input type="number" id="x0" placeholder="0" step="any" value="2200">
+        <input type="text" id="x0" placeholder="0" value="2200">
       </div>
       <div class="field">
         <label>Debt</label>
-        <input type="number" id="x1" placeholder="0" step="any" value="850">
+        <input type="text" id="x1" placeholder="0" value="850">
       </div>
       <div class="field">
         <label>Order USD</label>
-        <input type="number" id="x3" placeholder="0" step="any" value="18.8">
+        <input type="text" id="x3" placeholder="0" value="18.8">
       </div>
       <div class="field">
         <label>Order Buy %</label>
-        <input type="number" id="x6" placeholder="0" step="any" min="0" value="0.2">
+        <input type="text" id="x6" placeholder="0" value="0.2">
       </div>
     </div>
 
@@ -435,8 +511,114 @@
       </div>
     </div>
   </div>
+  </div>
+
+  <div id="page-decay" class="page-panel page-decay">
+    <div class="wrap">
+      <h1>คำนวณ "ลดลง 0.2%" จากราคาเริ่ม → ราคาปลาย (Compound vs Linear)</h1>
+      <div class="grid">
+        <div class="card">
+          <div class="row">
+            <div>
+              <label>ราคาเริ่มต้น (Start)</label>
+              <input id="start" type="text" value="3.6">
+            </div>
+            <div>
+              <label>ราคาปลาย (Target)</label>
+              <input id="target" type="text" value="0.522">
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>เปอร์เซ็นต์ต่อครั้ง (%)</label>
+              <input id="pct" type="text" value="0.2">
+            </div>
+            <div>
+              <label>โหมด</label>
+              <select id="mode">
+                <option value="both">แสดงทั้งคู่ (Compound + Linear)</option>
+                <option value="compound">Compound (ลด % จาก "ค่าก่อนหน้า")</option>
+                <option value="linear">Linear (ลดคงที่ = % ของราคาเริ่ม)</option>
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div>
+              <label>ทศนิยมแสดงผล</label>
+              <input id="dec" type="text" value="6">
+            </div>
+            <div>
+              <label>จำกัดจำนวนแถวในตาราง</label>
+              <input id="maxRows" type="text" value="200">
+            </div>
+          </div>
+          <button id="btnCalc">Calculate</button>
+          <div class="kpi">
+            <div class="pill">
+              <div class="t">จำนวนครั้ง (Compound)</div>
+              <div class="v" id="kpiComp">-</div>
+            </div>
+            <div class="pill">
+              <div class="t">จำนวนครั้ง (Linear)</div>
+              <div class="v" id="kpiLin">-</div>
+            </div>
+            <div class="pill">
+              <div class="t">ลดต่อครั้ง (Linear)</div>
+              <div class="v" id="kpiStep">-</div>
+            </div>
+            <div class="pill">
+              <div class="t">เช็กความถูกต้อง</div>
+              <div class="v" id="kpiCheck">-</div>
+            </div>
+          </div>
+          <p class="muted">
+            <span class="warn">หมายเหตุ:</span> "Grid 0.2% จริงในตลาด" มักเป็นแบบ <b>Compound</b> (เปอร์เซ็นต์คูณจากราคาล่าสุด)
+            ส่วน "Linear" คือการลบจำนวนคงที่เท่ากันทุกครั้ง (0.2% ของราคาเริ่ม)
+          </p>
+        </div>
+        <div class="card">
+          <div class="tabs">
+            <div class="tab active" data-tab="chart">กราฟ</div>
+            <div class="tab" data-tab="table">ตาราง</div>
+            <div class="tab" data-tab="formula">สูตร</div>
+          </div>
+          <div id="tab-chart">
+            <canvas id="cv" width="1200" height="420"></canvas>
+            <div class="tools">
+              <button class="btn2" id="btnDownloadCSV">Download CSV (ตาราง)</button>
+              <button class="btn2" id="btnCopySummary">Copy Summary</button>
+            </div>
+            <div class="muted" id="summary" style="margin-top:10px;"></div>
+          </div>
+          <div id="tab-table" style="display:none;">
+            <div class="muted">แสดงแถวแรก ๆ และแถวท้าย ๆ (รวมไม่เกินค่าที่กำหนด)</div>
+            <div id="tableWrap"></div>
+          </div>
+          <div id="tab-formula" style="display:none;">
+            <div class="muted" style="line-height:1.8;">
+              <b>Compound:</b> ราคาแต่ละขั้น = <code>start × (1 - r)^n</code><br/>
+              ต้องการหาจำนวนครั้งถึง target: <code>n = ceil( ln(target/start) / ln(1-r) )</code><br/><br/>
+              <b>Linear:</b> ลดคงที่ต่อครั้ง = <code>start × r</code><br/>
+              ราคาแต่ละขั้น = <code>start - n × (start×r)</code><br/>
+              ต้องการหาจำนวนครั้งถึง target: <code>n = ceil( (start - target) / (start×r) )</code>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <script>
+    document.querySelectorAll(".page-tab").forEach(function(btn) {
+      btn.addEventListener("click", function() {
+        var page = this.dataset.page;
+        document.querySelectorAll(".page-tab").forEach(function(b) { b.classList.remove("active"); });
+        this.classList.add("active");
+        document.querySelectorAll(".page-panel").forEach(function(p) { p.classList.remove("active"); });
+        document.getElementById("page-" + page).classList.add("active");
+      });
+    });
+
     const API_URL = 'https://api.cayoshibot.com/api/Binace/Get_ML';
     const configIdEl = document.getElementById('configId');
     const loadBtn = document.getElementById('loadBtn');
@@ -620,6 +802,195 @@
     }
     fetchXrpPrice();
     setInterval(fetchXrpPrice, 15000);
+  </script>
+  <script>
+  (function() {
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+    function fmt(n, dec) { return Number.isFinite(n) ? n.toFixed(dec) : "NaN"; }
+    function calcStepsCompound(start, target, r) {
+      if (!(start > 0) || !(target > 0) || !(r > 0) || r >= 1) return { n: 0, series: [start] };
+      if (target >= start) return { n: 0, series: [start] };
+      var n = Math.ceil(Math.log(target / start) / Math.log(1 - r));
+      var series = [];
+      for (var i = 0; i <= n; i++) series.push(start * Math.pow(1 - r, i));
+      return { n: n, series: series };
+    }
+    function calcStepsLinear(start, target, r) {
+      if (!(start > 0) || !(r > 0) || r >= 1) return { n: 0, step: 0, series: [start] };
+      if (target >= start) return { n: 0, step: start * r, series: [start] };
+      var step = start * r;
+      var n = Math.ceil((start - target) / step);
+      var series = [];
+      for (var i = 0; i <= n; i++) series.push(start - step * i);
+      return { n: n, step: step, series: series };
+    }
+    function buildTable(mode, dec, maxRows, comp, lin) {
+      var rows = [];
+      var nMax = Math.max(comp.series.length, lin.series.length) - 1;
+      for (var i = 0; i <= nMax; i++) {
+        rows.push({
+          step: i,
+          compound: i < comp.series.length ? comp.series[i] : null,
+          linear: i < lin.series.length ? lin.series[i] : null
+        });
+      }
+      var limit = Math.max(20, Number(maxRows) || 200);
+      var view = rows;
+      var trimmed = false;
+      if (rows.length > limit) {
+        trimmed = true;
+        var head = Math.floor(limit * 0.6), tail = limit - head;
+        view = rows.slice(0, head).concat([{ step: "…", compound: null, linear: null }]).concat(rows.slice(rows.length - tail));
+      }
+      var html = '<table><thead><tr><th>Step</th><th>Compound</th><th>Linear</th></tr></thead><tbody>';
+      for (var j = 0; j < view.length; j++) {
+        var r = view[j];
+        html += '<tr><td>' + r.step + '</td><td>' + (r.compound == null ? "" : fmt(r.compound, dec)) + '</td><td>' + (r.linear == null ? "" : fmt(r.linear, dec)) + '</td></tr>';
+      }
+      html += '</tbody></table>';
+      if (trimmed) html += '<div class="muted" style="margin-top:8px;">* ตารางถูกตัดให้ไม่เกิน ' + limit + ' แถว</div>';
+      return { html: html, rows: rows };
+    }
+    function drawChart(canvas, dec, mode, start, target, comp, lin) {
+      var ctx = canvas.getContext("2d");
+      var w = canvas.width, h = canvas.height;
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "#1e232d";
+      ctx.fillRect(0, 0, w, h);
+      var padL = 60, padR = 20, padT = 20, padB = 40;
+      var plotW = w - padL - padR, plotH = h - padT - padB;
+      var showComp = (mode === "both" || mode === "compound");
+      var showLin = (mode === "both" || mode === "linear");
+      var maxN = Math.max(showComp ? comp.series.length - 1 : 0, showLin ? lin.series.length - 1 : 0, 1);
+      var yMin = target;
+      if (showComp) yMin = Math.min(yMin, comp.series[comp.series.length - 1]);
+      if (showLin) yMin = Math.min(yMin, lin.series[lin.series.length - 1]);
+      var yMax = start;
+      if (yMax - yMin < 1e-12) yMax = yMin + 1;
+      var xToPx = function(x) { return padL + (x / maxN) * plotW; };
+      var yToPx = function(y) { return padT + (1 - (y - yMin) / (yMax - yMin)) * plotH; };
+      ctx.strokeStyle = "#2d3544";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      for (var i = 0; i <= 10; i++) {
+        ctx.moveTo(padL, padT + (i/10) * plotH);
+        ctx.lineTo(padL + plotW, padT + (i/10) * plotH);
+      }
+      for (i = 0; i <= 10; i++) {
+        ctx.moveTo(padL + (i/10) * plotW, padT);
+        ctx.lineTo(padL + (i/10) * plotW, padT + plotH);
+      }
+      ctx.stroke();
+      ctx.fillStyle = "#8b92a0";
+      ctx.font = "12px Outfit, sans-serif";
+      ctx.fillText("Price", 10, padT + 12);
+      ctx.fillText("Step", padL + plotW/2 - 14, h - 10);
+      for (i = 0; i <= 5; i++) {
+        var yv = yMin + (i/5) * (yMax - yMin);
+        ctx.fillText(fmt(yv, Math.min(6, dec)), 8, yToPx(yv) + 4);
+      }
+      ctx.strokeStyle = "#252b36";
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(padL, yToPx(target));
+      ctx.lineTo(padL + plotW, yToPx(target));
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = "#8b92a0";
+      ctx.fillText("target " + fmt(target, Math.min(6, dec)), padL + 6, yToPx(target) - 6);
+      function plot(series, stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        for (var k = 0; k < series.length; k++) {
+          var x = xToPx(k), y = yToPx(series[k]);
+          if (k === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.stroke();
+      }
+      if (showComp) plot(comp.series, "#3b82f6");
+      if (showLin) plot(lin.series, "#f59e0b");
+      var lx = padL + 10, ly = padT + 14;
+      ctx.fillStyle = "#e4e8ef";
+      ctx.font = "12px Outfit, sans-serif";
+      if (showComp) {
+        ctx.fillStyle = "#3b82f6";
+        ctx.fillRect(lx, ly - 10, 14, 3);
+        ctx.fillStyle = "#e4e8ef";
+        ctx.fillText("Compound", lx + 20, ly - 6);
+        ly += 18;
+      }
+      if (showLin) {
+        ctx.fillStyle = "#f59e0b";
+        ctx.fillRect(lx, ly - 10, 14, 3);
+        ctx.fillStyle = "#e4e8ef";
+        ctx.fillText("Linear", lx + 20, ly - 6);
+      }
+    }
+    function makeCSV(rows) {
+      var lines = ["step,compound,linear"];
+      for (var i = 0; i < rows.length; i++) {
+        lines.push([rows[i].step, rows[i].compound ?? "", rows[i].linear ?? ""].join(","));
+      }
+      return lines.join("\n");
+    }
+    function downloadText(filename, text) {
+      var blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+    function updateUI() {
+      var start = Number(document.getElementById("start").value);
+      var target = Number(document.getElementById("target").value);
+      var pct = Number(document.getElementById("pct").value);
+      var mode = document.getElementById("mode").value;
+      var dec = clamp(Number(document.getElementById("dec").value || 6), 0, 12);
+      var maxRows = clamp(Number(document.getElementById("maxRows").value || 200), 50, 5000);
+      var r = pct / 100;
+      var comp = calcStepsCompound(start, target, r);
+      var lin = calcStepsLinear(start, target, r);
+      document.getElementById("kpiComp").textContent = comp.n.toLocaleString();
+      document.getElementById("kpiLin").textContent = lin.n.toLocaleString();
+      document.getElementById("kpiStep").textContent = fmt(lin.step, dec);
+      var compLast = comp.series[comp.series.length - 1];
+      var linLast = lin.series[lin.series.length - 1];
+      document.getElementById("kpiCheck").textContent = "C:" + (compLast <= target ? "OK" : "NO") + " | L:" + (linLast <= target ? "OK" : "NO");
+      var summary = "Start=" + fmt(start, dec) + " → Target=" + fmt(target, dec) + " | step=" + pct + "%\nCompound: " + comp.n + " ครั้ง, ราคาหลังครั้งสุดท้าย=" + fmt(compLast, dec) + "\nLinear: " + lin.n + " ครั้ง, ลดคงที่/ครั้ง=" + fmt(lin.step, dec) + ", ราคาหลังครั้งสุดท้าย=" + fmt(linLast, dec);
+      document.getElementById("summary").textContent = summary;
+      var tb = buildTable(mode, dec, maxRows, comp, lin);
+      document.getElementById("tableWrap").innerHTML = tb.html;
+      drawChart(document.getElementById("cv"), dec, mode, start, target, comp, lin);
+      document.getElementById("btnDownloadCSV").onclick = function() { downloadText("price_decay_steps.csv", makeCSV(tb.rows)); };
+      document.getElementById("btnCopySummary").onclick = function() {
+        navigator.clipboard && navigator.clipboard.writeText(summary);
+        var btn = document.getElementById("btnCopySummary");
+        btn.textContent = "Copied ✅";
+        setTimeout(function() { btn.textContent = "Copy Summary"; }, 900);
+      };
+    }
+    document.getElementById("btnCalc").addEventListener("click", updateUI);
+    ["start", "target", "pct", "mode", "dec", "maxRows"].forEach(function(id) {
+      document.getElementById(id).addEventListener("change", updateUI);
+    });
+    document.querySelectorAll("#page-decay .tab").forEach(function(t) {
+      t.addEventListener("click", function() {
+        document.querySelectorAll("#page-decay .tab").forEach(function(x) { x.classList.remove("active"); });
+        this.classList.add("active");
+        var tab = this.dataset.tab;
+        document.getElementById("tab-chart").style.display = (tab === "chart") ? "" : "none";
+        document.getElementById("tab-table").style.display = (tab === "table") ? "" : "none";
+        document.getElementById("tab-formula").style.display = (tab === "formula") ? "" : "none";
+      });
+    });
+    updateUI();
+  })();
   </script>
 </body>
 </html>
