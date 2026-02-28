@@ -392,12 +392,32 @@
       setPercent(v);
     }, { passive: false });
 
-    document.getElementById('percentDec').addEventListener('click', () => {
-      setPercent(num(percentSlider.value) - PERCENT_STEP);
-    });
-    document.getElementById('percentInc').addEventListener('click', () => {
-      setPercent(num(percentSlider.value) + PERCENT_STEP);
-    });
+    function holdRepeat(btn, delta) {
+      let tid;
+      const stop = () => {
+        clearTimeout(tid);
+        tid = null;
+      };
+      const repeat = (delay) => {
+        setPercent(num(percentSlider.value) + delta);
+        const next = Math.max(1, delay * 0.01);
+        tid = setTimeout(() => repeat(next), next);
+      };
+      const start = () => {
+        setPercent(num(percentSlider.value) + delta);
+        if (!tid) {
+          tid = setTimeout(() => repeat(200), 200);
+        }
+      };
+      btn.addEventListener('mousedown', (e) => { e.preventDefault(); start(); });
+      btn.addEventListener('mouseup', stop);
+      btn.addEventListener('mouseleave', stop);
+      btn.addEventListener('touchstart', (e) => { e.preventDefault(); start(); }, { passive: false });
+      btn.addEventListener('touchend', stop);
+      btn.addEventListener('touchcancel', stop);
+    }
+    holdRepeat(document.getElementById('percentDec'), -PERCENT_STEP);
+    holdRepeat(document.getElementById('percentInc'), PERCENT_STEP);
 
     x6El.addEventListener('wheel', (e) => {
       e.preventDefault();
