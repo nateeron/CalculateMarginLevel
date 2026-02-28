@@ -443,7 +443,7 @@
       };
       const repeat = (delay) => {
         setPercent(num(percentSlider.value) + delta);
-        const next = Math.max(1, delay * 0.01);
+        const next = Math.max(3, delay * 0.7);
         tid = setTimeout(() => repeat(next), next);
       };
       const start = () => {
