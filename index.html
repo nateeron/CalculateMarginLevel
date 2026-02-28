@@ -36,7 +36,7 @@
       color: var(--text);
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
       padding: 1.5rem;
       line-height: 1.5;
@@ -47,21 +47,54 @@
       border: 1px solid var(--card-border);
       border-radius: 16px;
       padding: 2rem;
-      max-width: 480px;
+      max-width: 900px;
       width: 100%;
       box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
     }
 
     .card-title {
       font-size: 1.35rem;
       font-weight: 700;
-      margin-bottom: 1.5rem;
       color: var(--text);
       letter-spacing: -0.02em;
+      margin: 0;
+    }
+
+    .card-header .xrp-price {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .card-header .xrp-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-right: 0.25rem;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem 1.25rem;
+      margin-bottom: 1.25rem;
     }
 
     .field {
       margin-bottom: 1.25rem;
+    }
+
+    .input-grid .field {
+      margin-bottom: 0;
     }
 
     .field label {
@@ -142,6 +175,13 @@
       margin-top: 1.75rem;
       padding-top: 1.5rem;
       border-top: 1px solid var(--card-border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0 1.5rem;
+    }
+
+    .results .result-row {
+      padding: 0.5rem 0;
     }
 
     .result-row {
@@ -159,7 +199,7 @@
     .result-row .value {
       font-family: 'JetBrains Mono', monospace;
       font-weight: 600;
-      color: var(--text);
+      color: #ac710f;
     }
 
     .result-row.highlight .value {
@@ -170,6 +210,71 @@
     .result-row.ml .value {
       color: var(--success);
       font-size: 1.1rem;
+    }
+
+    .result-row.debt-total .value {
+      color: #df7676;
+    }
+
+    .result-row.cal-price-stop .value {
+      color: #0f9eac;
+    }
+
+    .result-row.cal-price .value {
+      color: #ac590f;
+    }
+
+    .info-wrap {
+      position: relative;
+      display: inline-flex;
+      margin-left: 4px;
+    }
+
+    .info-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-muted);
+      background: var(--input-border);
+      border-radius: 50%;
+      cursor: help;
+    }
+
+    .info-icon:hover {
+      color: var(--accent);
+    }
+
+    .info-wrap .tooltip-box {
+      position: absolute;
+      left: 50%;
+      bottom: calc(100% + 6px);
+      transform: translateX(-50%);
+      padding: 0.4rem 0.6rem;
+      background: var(--card);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      font-size: 0.75rem;
+      line-height: 1.4;
+      color: var(--text);
+      max-width: 220px;
+      width: max-content;
+      white-space: normal;
+      word-wrap: break-word;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.15s, visibility 0.15s;
+      z-index: 100;
+      pointer-events: none;
+    }
+
+    .info-wrap:hover .tooltip-box {
+      opacity: 1;
+      visibility: visible;
     }
 
     .formula {
@@ -239,47 +344,16 @@
       border-color: var(--accent);
     }
 
-    .mini-card {
-      background: var(--input-bg);
-      border: 1px solid var(--input-border);
-      border-radius: 10px;
-      padding: 0.6rem 1rem;
-      margin-bottom: 1.25rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.75rem;
-    }
-
-    .mini-card .label {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      font-weight: 600;
-    }
-
-    .mini-card .price {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--accent);
-    }
-
-    .mini-card .loading {
-      color: var(--text-muted);
-      font-size: 0.85rem;
-    }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1 class="card-title">Calculate Margin Level</h1>
-
-    <div class="mini-card">
-      <span class="label">XRPUSDT (Binance) = x</span>
-      <span class="price" id="xrpPrice">—</span>
+    <div class="card-header">
+      <h1 class="card-title">Calculate Margin Level</h1>
+      <span><span class="xrp-label">XRPUSDT </span><span class="xrp-price" id="xrpPrice">—</span></span>
     </div>
 
-    <div class="field load-row">
+    <div class="field load-row" style="display: none;">
       <label>Config ID</label>
       <div class="load-input-wrap">
         <input type="number" id="configId" placeholder="4" step="1" value="4">
@@ -287,24 +361,23 @@
       </div>
     </div>
 
-    <div class="field">
-      <label>Balance Value</label>
-      <input type="number" id="x0" placeholder="0" step="any" value="2200">
-    </div>
-
-    <div class="field">
-      <label>Debt</label>
-      <input type="number" id="x1" placeholder="0" step="any" value="850">
-    </div>
-
-    <div class="field">
-      <label>Order USD</label>
-      <input type="number" id="x3" placeholder="0" step="any" value="18.8">
-    </div>
-
-    <div class="field">
-      <label>Order Buy %</label>
-      <input type="number" id="x6" placeholder="0" step="any" min="0" value="0.2">
+    <div class="input-grid">
+      <div class="field">
+        <label>Balance Value</label>
+        <input type="number" id="x0" placeholder="0" step="any" value="2200">
+      </div>
+      <div class="field">
+        <label>Debt</label>
+        <input type="number" id="x1" placeholder="0" step="any" value="850">
+      </div>
+      <div class="field">
+        <label>Order USD</label>
+        <input type="number" id="x3" placeholder="0" step="any" value="18.8">
+      </div>
+      <div class="field">
+        <label>Order Buy %</label>
+        <input type="number" id="x6" placeholder="0" step="any" min="0" value="0.2">
+      </div>
     </div>
 
     <div class="slider-wrap">
@@ -321,36 +394,44 @@
 
     <div class="results">
       <div class="result-row">
-        <span class="label">Balance from</span>
+        <span class="label">Balance from<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: x0 × (Balance Value % / 100)</span></span></span>
         <span class="value" id="x4">0</span>
       </div>
+      <div class="result-row ml">
+        <span class="label">ML<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: Total Balance / Debt รวม</span></span></span>
+        <span class="value" id="ml">—</span>
+      </div>
       <div class="result-row highlight">
-        <span class="label">Total Balance</span>
+        <span class="label">Total Balance<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: (x0 − x4) + มูลค่า Order</span></span></span>
         <span class="value" id="x2">0</span>
       </div>
+      <div class="result-row debt-total">
+        <span class="label">Debt รวม<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: Debt (x1) + มูลค่า Order</span></span></span>
+        <span class="value" id="debtTotal">0</span>
+      </div>
       <div class="result-row">
-        <span class="label">จำนวน Order</span>
+        <span class="label">จำนวน Order<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: Balance Value % / Order Buy % (x6)</span></span></span>
         <span class="value" id="x7">0</span>
       </div>
       <div class="result-row">
-        <span class="label">มูลค่า Order</span>
+        <span class="label">มูลค่า Order<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: จำนวน Order × Order USD (x3)</span></span></span>
         <span class="value" id="orderValue">0</span>
       </div>
-      <div class="result-row">
-        <span class="label">Debt รวม</span>
-        <span class="value" id="debtTotal">0</span>
-      </div>
-      <div class="result-row ml">
-        <span class="label">ML</span>
-        <span class="value" id="ml">—</span>
+      <div class="result-row cal-price-stop">
+        <span class="label">หยุดซื้อที่ราคา<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: XRPUSDT × (1 − Balance Value % / 100)</span></span></span>
+        <span class="value" id="calPrice">—</span>
       </div>
       <div class="result-row">
-        <span class="label">ทนลงได้ (%)</span>
+        <span class="label">ทนลงได้ (%)<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: ((Debt รวม − Total Balance) / Total Balance) × 100</span></span></span>
         <span class="value" id="x2Percent">—</span>
       </div>
+      <div class="result-row cal-price">
+        <span class="label">Cal Price<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: หยุดซื้อที่ราคา × (1 + ทนลงได้ % / 100)</span></span></span>
+        <span class="value" id="calPrice2">—</span>
+      </div>
       <div class="result-row">
-        <span class="label">XRPUSDT ราคาประมาณ </span>
-        <span class="value" id="calPrice">—</span>
+        <span class="label">Cal ทนลงได้ทั้งหมด (%)<span class="info-wrap"><span class="info-icon">!</span><span class="tooltip-box">สูตร: (ราคา XRP ล่าสุด − Cal Price) / ราคา XRP ล่าสุด × 100</span></span></span>
+        <span class="value" id="calTolerance">—</span>
       </div>
     </div>
   </div>
@@ -373,6 +454,8 @@
     const mlEl = document.getElementById('ml');
     const x2PercentEl = document.getElementById('x2Percent');
     const calPriceEl = document.getElementById('calPrice');
+    const calPrice2El = document.getElementById('calPrice2');
+    const calToleranceEl = document.getElementById('calTolerance');
     let xrpLastPrice = null;
 
     function num(v) {
@@ -408,9 +491,14 @@
       orderValueEl.textContent = formatNum(orderValue);
       debtTotalEl.textContent = formatNum(debtTotal);
       mlEl.textContent = ml !== null ? formatNum(ml) : '—';
+      mlEl.style.color = ml == null ? '' : (ml > 1.5 ? 'var(--success)' : ml < 1.1 ? 'rgb(56, 56, 56)' : ml < 1.3 ? '#ef4444' : '#c56722');
       x2PercentEl.textContent = x2Percent !== null ? formatNum(x2Percent) + '%' : '—';
-      const calPrice = (xrpLastPrice != null && x2Percent != null) ? xrpLastPrice * (1 + x2Percent / 100) : null;
+      const calPrice = (xrpLastPrice != null) ? xrpLastPrice * (1 - percent / 100) : null;
+      const calPrice2 = (calPrice != null && x2Percent != null) ? calPrice * (1 + x2Percent / 100) : null;
+      const calTolerance = (xrpLastPrice != null && xrpLastPrice !== 0 && calPrice2 != null) ? ((xrpLastPrice - calPrice2) / xrpLastPrice) * 100 : null;
       calPriceEl.textContent = calPrice != null ? formatNum(calPrice) : '—';
+      calPrice2El.textContent = calPrice2 != null ? formatNum(calPrice2) : '—';
+      calToleranceEl.textContent = calTolerance != null ? formatNum(calTolerance) + '%' : '—';
     }
 
     [x0El, x1El, x3El, x6El, percentSlider].forEach(el => {
@@ -519,7 +607,7 @@
         const data = await res.json();
         if (data.lastPrice != null) {
           xrpLastPrice = parseFloat(data.lastPrice);
-          xrpPriceEl.textContent = '$' + xrpLastPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
+          xrpPriceEl.textContent =  xrpLastPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 });
         } else {
           xrpLastPrice = null;
           xrpPriceEl.textContent = '—';
